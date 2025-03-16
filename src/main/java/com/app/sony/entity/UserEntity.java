@@ -1,37 +1,44 @@
 package com.app.sony.entity;
 
 import com.app.sony.model.User;
-import com.app.sony.util.RoleEnum;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import jakarta.persistence.*;
 
 import java.util.Objects;
 
-@Entity
-@Table(name = "user")
+@Entity(name = "user")
 public class UserEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "user_id", nullable = false)
     private Integer userId;
 
-    @Column(name = "name", nullable = false)
+    @Column
     private String name;
 
-    @Column(name = "email", nullable = false, unique = true)
-    private String email;
-
-    @Column(name = "password", nullable = false)
+    @Column
     private String password;
 
-    @Column(name = "mobile_number", nullable = false)
+    @Column
+    private String email;
+
+    @Column
     private String mobileNumber;
 
-    @Column(name = "role", nullable = false)
-    private RoleEnum role;
-
-    @Column(name = "address", nullable = false)
+    @Column
     private String address;
+
+    @Column
+    private User.RoleEnum role;
+
+    public UserEntity() {
+    }
+    public UserEntity(User user) {
+        this.name = user.getName();
+        this.password = user.getPassword();
+        this.email = user.getEmail();
+        this.role = user.getRole();
+    }
 
     public Integer getUserId() {
         return userId;
@@ -49,20 +56,20 @@ public class UserEntity {
         this.name = name;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getMobileNumber() {
@@ -73,14 +80,6 @@ public class UserEntity {
         this.mobileNumber = mobileNumber;
     }
 
-    public RoleEnum getRole() {
-        return role;
-    }
-
-    public void setRole(RoleEnum role) {
-        this.role = role;
-    }
-
     public String getAddress() {
         return address;
     }
@@ -89,17 +88,12 @@ public class UserEntity {
         this.address = address;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UserEntity that = (UserEntity) o;
-        return Objects.equals(userId, that.userId) && Objects.equals(name, that.name) && Objects.equals(email, that.email) && Objects.equals(password, that.password) && Objects.equals(mobileNumber, that.mobileNumber) && Objects.equals(role, that.role) && Objects.equals(address, that.address);
+    public User.RoleEnum getRole() {
+        return role;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(userId, name, email, password, mobileNumber, role, address);
+    public void setRole(User.RoleEnum role) {
+        this.role = role;
     }
 
     @Override
@@ -107,11 +101,25 @@ public class UserEntity {
         return "UserEntity{" +
                 "userId=" + userId +
                 ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
                 ", mobileNumber='" + mobileNumber + '\'' +
-                ", role='" + role + '\'' +
                 ", address='" + address + '\'' +
+                ", role=" + role +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserEntity that = (UserEntity) o;
+        return Objects.equals(userId, that.userId) && Objects.equals(name, that.name) && Objects.equals(password, that.password) && Objects.equals(email, that.email) && Objects.equals(mobileNumber, that.mobileNumber) && Objects.equals(address, that.address) && role == that.role;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId, name, password, email, mobileNumber, address, role);
+    }
 }
+

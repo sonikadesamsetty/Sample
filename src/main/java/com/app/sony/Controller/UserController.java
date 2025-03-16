@@ -1,65 +1,35 @@
 package com.app.sony.Controller;
 
-
-import com.app.sony.Service.JwtService;
-import com.app.sony.Service.UserInfoService;
-import com.app.sony.entity.UserInfo;
-import com.app.sony.model.AuthRequest;
+import com.app.sony.entity.UserEntity;
+import com.app.sony.model.Response;
+import com.app.sony.model.User;
+import com.app.sony.repository.UserRepo;
+import com.app.sony.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/auth")
-public class UserController {
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")public class UserController {
 
     @Autowired
-    private UserInfoService service;
+    UserRepo userRepo;
 
     @Autowired
-    private JwtService jwtService;
+    UserService userService;
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @GetMapping("/welcome")
-    public String welcome() {
-        return "Welcome this endpoint is not secure";
+    @RequestMapping(value = "/login", produces = {"application/json"}, method = RequestMethod.POST)
+    public Response loginUser(@RequestBody User user) {
+        System.out.println("33333333333");
+        System.out.println(user);
+        Response resp = userService.verify(user);
+        System.out.println(resp);
+        return resp;
     }
-
-    @PostMapping("/addNewUser")
-    public String addNewUser(@RequestBody UserInfo userInfo) {
-        return service.addUser(userInfo);
-    }
-
-    @GetMapping("/user/userProfile")
-   // @PreAuthorize("hasAuthority('ROLE_USER')")
-    public String userProfile() {
-        return "Welcome to User Profile";
-    }
-
-    @GetMapping("/admin/adminProfile")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public String adminProfile() {
-        return "Welcome to Admin Profile";
-    }
-
-    @PostMapping("/generateToken")
-    public String authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
-        System.out.println("Ssssssss");
-        Authentication authentication = authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())
-        );
-        System.out.println("Ssssssss");
-        System.out.println(authentication);
-        if (authentication.isAuthenticated()) {
-            return jwtService.generateToken(authRequest.getUsername());
-        } else {
-            throw new UsernameNotFoundException("Invalid user request!");
-        }
+    @PostMapping("/register")
+    public ResponseEntity<User> registerUser(@RequestBody User user) {
+        System.out.println(user);
+        User resp = userService.register(user);
+         return ResponseEntity.ok(resp);
     }
 }

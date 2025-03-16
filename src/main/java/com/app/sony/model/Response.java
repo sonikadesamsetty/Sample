@@ -9,5 +9,28 @@ public class Response {
         this.user = user;
     }
 
-    // Getters and setters
+    @Override
+    public String toString() {
+        return "Response{" +
+                "token='" + token + '\'' +
+                ", user=" + user +
+                '}';
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+// Getters and setters
 }

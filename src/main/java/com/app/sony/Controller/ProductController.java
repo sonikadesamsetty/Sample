@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+@RestController
+@CrossOrigin(origins = "http://localhost:3000")
 
-@RestController("/")
-@CrossOrigin(origins = "*")
 public class ProductController implements ProductsApi {
 
     @Autowired
